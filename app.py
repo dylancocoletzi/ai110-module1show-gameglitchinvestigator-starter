@@ -1,70 +1,12 @@
 import random
 import streamlit as st
 
-def get_range_for_difficulty(difficulty: str):
-    if difficulty == "Easy":
-        return 1, 20
-    if difficulty == "Normal":
-        return 1, 100
-    if difficulty == "Hard":
-        return 1, 50
-    return 1, 100
-
-
-def parse_guess(raw: str):
-    if raw is None:
-        return False, None, "Enter a guess."
-
-    if raw == "":
-        return False, None, "Enter a guess."
-
-    try:
-        if "." in raw:
-            value = int(float(raw))
-        else:
-            value = int(raw)
-    except Exception:
-        return False, None, "That is not a number."
-
-    return True, value, None
-
-
-def check_guess(guess, secret):
-    if guess == secret:
-        return "Win", "🎉 Correct!"
-
-    try:
-        # FIXME: Logic breaks here — the hint messages are swapped. When the guess
-        # is too high the player should go LOWER, and when too low go HIGHER.
-        if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
-        else:
-            return "Too Low", "📉 Go LOWER!"
-    except TypeError:
-        g = str(guess)
-        if g == secret:
-            return "Win", "🎉 Correct!"
-        if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
-
-
-def update_score(current_score: int, outcome: str, attempt_number: int):
-    if outcome == "Win":
-        points = 100 - 10 * (attempt_number + 1)
-        if points < 10:
-            points = 10
-        return current_score + points
-
-    if outcome == "Too High":
-        if attempt_number % 2 == 0:
-            return current_score + 5
-        return current_score - 5
-
-    if outcome == "Too Low":
-        return current_score - 5
-
-    return current_score
+from logic_utils import (
+    get_range_for_difficulty,
+    parse_guess,
+    check_guess,
+    update_score,
+)
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
 
@@ -91,10 +33,11 @@ low, high = get_range_for_difficulty(difficulty)
 st.sidebar.caption(f"Range: {low} to {high}")
 st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
-# FIXME: Logic breaks here — secret is only generated on first run, so changing
-# difficulty never regenerates it within the chosen range.
-if "secret" not in st.session_state:
+# FIXED: track which difficulty the secret was generated for, and re-roll it
+# whenever the difficulty changes so the secret always matches the chosen range.
+if "secret" not in st.session_state or st.session_state.get("secret_difficulty") != difficulty:
     st.session_state.secret = random.randint(low, high)
+    st.session_state.secret_difficulty = difficulty
 
 if "attempts" not in st.session_state:
     st.session_state.attempts = 1
@@ -110,10 +53,10 @@ if "history" not in st.session_state:
 
 st.subheader("Make a guess")
 
-# FIXME: Logic breaks here — range is hardcoded to "1 and 100" instead of using
-# low/high, so the main page ignores the chosen difficulty.
+# FIXED: use the computed low/high so the main page reflects the chosen
+# difficulty instead of the hardcoded "1 and 100".
 st.info(
-    f"Guess a number between 1 and 100. "
+    f"Guess a number between {low} and {high}. "
     f"Attempts left: {attempt_limit - st.session_state.attempts}"
 )
 
@@ -139,9 +82,9 @@ with col3:
 
 if new_game:
     st.session_state.attempts = 0
-    # FIXME: Logic breaks here — New Game hardcodes the range to (1, 100) instead
-    # of using low/high, so restarting ignores the chosen difficulty too.
-    st.session_state.secret = random.randint(1, 100)
+    # FIXED: use low/high so a new game uses the range of the chosen difficulty.
+    st.session_state.secret = random.randint(low, high)
+    st.session_state.secret_difficulty = difficulty
     st.success("New game started.")
     st.rerun()
 
