@@ -39,8 +39,10 @@ if "secret" not in st.session_state or st.session_state.get("secret_difficulty")
     st.session_state.secret = random.randint(low, high)
     st.session_state.secret_difficulty = difficulty
 
+# FIXED: start attempts at 0 (no guesses made yet) so "Attempts left" shows the
+# full attempt_limit on a fresh game, matching how New Game initializes it.
 if "attempts" not in st.session_state:
-    st.session_state.attempts = 1
+    st.session_state.attempts = 0
 
 if "score" not in st.session_state:
     st.session_state.score = 0
