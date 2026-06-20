@@ -42,19 +42,20 @@ def check_guess(guess, secret):
         return "Win", "🎉 Correct!"
 
     try:
-        # FIXME: Logic breaks here — the hint messages are swapped. When the guess
-        # is too high the player should go LOWER, and when too low go HIGHER.
+        # FIXED: swapped the hint messages — a guess that's too high should tell
+        # the player to go LOWER, and a guess that's too low to go HIGHER.
         if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
+            return "Too High", "📉 Go LOWER!"
         else:
-            return "Too Low", "📉 Go LOWER!"
+            return "Too Low", "📈 Go HIGHER!"
     except TypeError:
         g = str(guess)
         if g == secret:
             return "Win", "🎉 Correct!"
+        # FIXED: same swap applied to the string-comparison fallback path.
         if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
+            return "Too High", "📉 Go LOWER!"
+        return "Too Low", "📈 Go HIGHER!"
 
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
