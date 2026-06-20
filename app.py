@@ -34,6 +34,8 @@ def check_guess(guess, secret):
         return "Win", "🎉 Correct!"
 
     try:
+        # FIXME: Logic breaks here — the hint messages are swapped. When the guess
+        # is too high the player should go LOWER, and when too low go HIGHER.
         if guess > secret:
             return "Too High", "📈 Go HIGHER!"
         else:
