@@ -35,9 +35,19 @@ st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
 # FIXED: track which difficulty the secret was generated for, and re-roll it
 # whenever the difficulty changes so the secret always matches the chosen range.
+# BUG: changing difficulty re-rolled the secret but left attempts, history,
+# score, and status untouched, so the new secret was paired with the old game's
+# state and the Developer Debug Info never reset on a difficulty change.
+# FIXED: reset ALL per-game state here too, so switching difficulty starts a
+# fresh game (this block also runs once on first load, which is harmless since
+# these are the same defaults the init below would set).
 if "secret" not in st.session_state or st.session_state.get("secret_difficulty") != difficulty:
     st.session_state.secret = random.randint(low, high)
     st.session_state.secret_difficulty = difficulty
+    st.session_state.attempts = 0
+    st.session_state.history = []
+    st.session_state.score = 0
+    st.session_state.status = "playing"
 
 # FIXED: start attempts at 0 (no guesses made yet) so "Attempts left" shows the
 # full attempt_limit on a fresh game, matching how New Game initializes it.
