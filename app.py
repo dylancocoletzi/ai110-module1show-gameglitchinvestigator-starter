@@ -69,6 +69,10 @@ with st.expander("Developer Debug Info"):
     st.write("Difficulty:", difficulty)
     st.write("History:", st.session_state.history)
 
+# FIXME: Logic breaks here — the text input and Submit button aren't in an
+# st.form, so pressing Enter reruns the app with submit=False and the guess is
+# silently ignored (not stored, attempts not decremented). Only clicking the
+# button works. Fix: wrap this input + a st.form_submit_button in an st.form.
 raw_guess = st.text_input(
     "Enter your guess:",
     key=f"guess_input_{difficulty}"
