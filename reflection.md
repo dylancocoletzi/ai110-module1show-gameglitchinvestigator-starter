@@ -5,7 +5,10 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 ## 1. What was broken when you started?
 
 - What did the game look like the first time you ran it?
+The first time I ran the game, it seemed like a guessing game that gave you hints if your high or lower to the number to guess. I expected the attempts left to decrease after the first guess but it didn't.
 - List at least two concrete bugs you noticed at the start  
+1. The hints that the game provided are inconsistent. If I guess the same number a few times, the hint would be different. 
+2. When you chose what difficulty you want to play the game, it tells you the allowed attempts but it is not consistent with the main page allowed attempts.
   (for example: "the hints were backwards").
 
 **Bug Reproduction Log**
@@ -14,15 +17,16 @@ Document at least 3 bugs you found. Add rows as needed.
 
 | Input | Expected Behavior | Actual Behavior | Console Output / Error |
 |-------|-------------------|-----------------|------------------------|
-| | | | |
-| | | | |
-| | | | |
+guess 1 | Attempts left: 6  | Attempts left: 7| None
+New Game|  Start new game   | Stuck           | ..Start a new game to try again.
+guess 1 |    Go Higher      | Go Lower        | None
 
 ---
 
 ## 2. How did you use AI as a teammate?
 
 - Which AI tools did you use on this project (for example: ChatGPT, Gemini, Copilot)?
+For this project, the AI tool I used was claude code in VS code to investihate the current buggy logic of some features of the app. 
 - Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result).
 - Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
 

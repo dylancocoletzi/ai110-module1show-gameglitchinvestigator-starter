@@ -89,6 +89,8 @@ low, high = get_range_for_difficulty(difficulty)
 st.sidebar.caption(f"Range: {low} to {high}")
 st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
+# FIXME: Logic breaks here — secret is only generated on first run, so changing
+# difficulty never regenerates it within the chosen range.
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
@@ -106,6 +108,8 @@ if "history" not in st.session_state:
 
 st.subheader("Make a guess")
 
+# FIXME: Logic breaks here — range is hardcoded to "1 and 100" instead of using
+# low/high, so the main page ignores the chosen difficulty.
 st.info(
     f"Guess a number between 1 and 100. "
     f"Attempts left: {attempt_limit - st.session_state.attempts}"
@@ -133,6 +137,8 @@ with col3:
 
 if new_game:
     st.session_state.attempts = 0
+    # FIXME: Logic breaks here — New Game hardcodes the range to (1, 100) instead
+    # of using low/high, so restarting ignores the chosen difficulty too.
     st.session_state.secret = random.randint(1, 100)
     st.success("New game started.")
     st.rerun()
