@@ -47,9 +47,14 @@ When I said that sometimes a guess wasn't being stored in the history, the AI su
 ## 3. Debugging and testing your fixes
 
 - How did you decide whether a bug was really fixed?
+I decided a bug was fixed by reproducing the exact situation that triggered it and checking that it now behaved the way I expected. For example, after fixing the hints I re-ran the scenario where the secret was 89 and I guessed 80, and made sure it now said "Go HIGHER." For the Streamlit bugs I tested in the running app — switching difficulty, starting a new game, and pressing Enter — and watched the Developer Debug Info to confirm the history, attempts, and score updated correctly. I only moved on once the original symptom was gone and nothing else had broken.
+
 - Describe at least one test you ran (manual or using pytest)  
   and what it showed you about your code.
+I wrote pytest tests for the logic in logic_utils.py, including two that target the inverted-hint bug: one checks that check_guess(80, 89) returns a "Go HIGHER" message and another that check_guess(95, 89) returns "Go LOWER." Running them showed something useful right away — the original starter tests were failing because they compared check_guess to a plain string like "Win," but the function actually returns a tuple (outcome, message). That told me the tests and the code didn't agree on the return shape, so I updated the tests to unpack the tuple, and then all 15 tests passed.
+
 - Did AI help you design or understand any tests? How?
+Yes. The AI helped me see that the existing tests were failing because of the tuple-vs-string mismatch, and it explained why I couldn't just change check_guess to return a single string (the app unpacks both the outcome and the message). It also suggested writing tests that check the hint message direction, not just the outcome label, since the bug I fixed was specifically in the message text. That helped me understand that a good test should target the exact behavior that was broken.
 
 ---
 

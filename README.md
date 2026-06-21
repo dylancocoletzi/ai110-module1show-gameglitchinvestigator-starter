@@ -66,9 +66,29 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+$ python3 -m pytest tests/test_game_logic.py -v
+
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0
+collecting ... collected 15 items
+
+tests/test_game_logic.py::test_winning_guess PASSED                      [  6%]
+tests/test_game_logic.py::test_guess_too_high PASSED                     [ 13%]
+tests/test_game_logic.py::test_guess_too_low PASSED                      [ 20%]
+tests/test_game_logic.py::test_hint_too_low_tells_player_to_go_higher PASSED [ 26%]
+tests/test_game_logic.py::test_hint_too_high_tells_player_to_go_lower PASSED [ 33%]
+tests/test_game_logic.py::test_difficulty_ranges PASSED                  [ 40%]
+tests/test_game_logic.py::test_difficulty_unknown_defaults_to_full_range PASSED [ 46%]
+tests/test_game_logic.py::test_parse_valid_integer PASSED                [ 53%]
+tests/test_game_logic.py::test_parse_empty_string_is_invalid PASSED      [ 60%]
+tests/test_game_logic.py::test_parse_none_is_invalid PASSED              [ 66%]
+tests/test_game_logic.py::test_parse_non_number_is_invalid PASSED        [ 73%]
+tests/test_game_logic.py::test_parse_decimal_is_truncated PASSED         [ 80%]
+tests/test_game_logic.py::test_winning_score_increases PASSED            [ 86%]
+tests/test_game_logic.py::test_winning_score_has_minimum_of_ten PASSED   [ 93%]
+tests/test_game_logic.py::test_too_low_loses_points PASSED               [100%]
+
+============================== 15 passed in 0.02s ==============================
 ```
 
 ## 🚀 Stretch Features
